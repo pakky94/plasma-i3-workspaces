@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Plasma i3 Workspaces
+Comment=Plasma i3 Workspaces
+ServiceTypes=Plasma/Applet
+Type=Service
+X-KDE-PluginInfo-Author=Pakky94
+X-KDE-PluginInfo-Email=m.pacchialat@gmail.com
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=com.github.plasma-i3-workspaces
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=github.com/pakky94/plasma-i3-workspaces
+X-KDE-ServiceTypes=Plasma/Applet
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/main.qml
