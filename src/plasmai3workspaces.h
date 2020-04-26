@@ -52,7 +52,6 @@ signals:
 
 class PlasmaI3Workspaces : public QObject {
     Q_OBJECT
-    Q_PROPERTY(QString getMessage READ getMessage)
 public:
     explicit PlasmaI3Workspaces(QObject *parent = 0);
 
