@@ -22,19 +22,14 @@ Item {
         PlasmaI3Workspaces {
             id: plasmai3workspaces
             onWorkspaceChanged: {
-                is_updating = is_updating - 1;
                 updateOutText();
-                if (is_updating == 0) {
-                    this.waitForUpdate();
-                    is_updating = is_updating + 1;
-                }
             }
             onModeChanged: {
                 if (s.localeCompare("") != 0) {
-                var input = JSON.parse(s);
-                current_mode = input.change;
-                updateOutText();
-            }
+                    var input = JSON.parse(s);
+                    current_mode = input.change;
+                    updateOutText();
+                }
             }
             onI3restarted: {
                 restart_timer.start();
@@ -43,8 +38,8 @@ Item {
 
         TextMetrics {
             id: textMetrics
-            font.family: "Arial"
-            font.pixelSize: 15
+            font.family: plasmoid.configuration.textFont
+            font.pixelSize: plasmoid.configuration.textSize
         }
         function updateOutText() {
             var input_str = plasmai3workspaces.getWorkspaces();
@@ -61,7 +56,8 @@ Item {
                         workspaceModel.append({
                             "b_color": "transparent",
                             "w_name": "",
-                            "w_text": ""
+                            "w_text": "",
+                            "r_width": 20
                         });
                         count_w = count_w + 22
                         last_out = w.output;
@@ -70,18 +66,19 @@ Item {
                     textMetrics.text = w.name
                     count_w = count_w + 2 + Math.max(20, textMetrics.width + 10)
 
-                    var b_color = "#787878"
+                    var b_color = plasmoid.configuration.borderNormalWsColor
                     if (w.visible == true)
-                        b_color = "#dddddd"
+                        b_color = plasmoid.configuration.borderVisibleWsColor
                     if (w.focused == true)
-                        b_color = "blue"
+                        b_color = plasmoid.configuration.borderFocusedWsColor
                     else if (w.urgent == true)
-                        b_color = "red"
+                        b_color = plasmoid.configuration.borderUrgentWsColor
                     workspaceModel.append(
                         {
                             "w_name": w.name,
                             "w_text": w.name,
-                            "b_color": b_color
+                            "b_color": b_color.toString(),
+                            "r_width": Math.max(textMetrics.width + 10, 20)
                         });
                 })
                 out_view.implicitWidth = count_w
@@ -92,12 +89,14 @@ Item {
                     workspaceModel.append({
                         "w_name": "",
                         "w_text": "",
-                        "b_color": "#00000000"
+                        "b_color": "#00000000",
+                        "r_width": 20
                     });
                     workspaceModel.append({
                         "w_name": "",
                         "w_text": current_mode,
-                        "b_color": "red"
+                        "b_color": plasmoid.configuration.borderModeColor.toString(),
+                        "r_width": Math.max(textMetrics.width + 10, 20)
                     });
                 }
                 out_view.implicitWidth = count_w + mode_text_width
@@ -121,10 +120,13 @@ Item {
         Component {
             id: workspaceDelegate
             Rectangle {
-                width: Math.max(textMetrics.width + 10, 20)
-                height: Math.max(textMetrics.height, 20)
+                // width: Math.max(textMetrics.width + 10, 20)
+                // height: Math.max(textMetrics.height, 20)
+                width: r_width
+                height: 20
                 color: "#00000000"
                 border.color: b_color
+                // border.color: plasmoid.configuration.borderNormalWsColor
                 border.width: 2
                 MouseArea {
                     anchors.fill: parent
@@ -136,16 +138,17 @@ Item {
                 }
                 Text {
                     anchors.centerIn: parent
-                    color: "#dddddd"
-                    text: textMetrics.text
-                    font: textMetrics.font
-                }
-                TextMetrics {
-                    id: textMetrics
-                    font.family: "Arial"
-                    font.pixelSize: 15
+                    color: plasmoid.configuration.textColor
                     text: w_text
+                    font.family: plasmoid.configuration.textFont
+                    font.pixelSize: plasmoid.configuration.textSize
                 }
+                // TextMetrics {
+                //     id: textMetrics
+                //     font.family: "Arial"
+                //     font.pixelSize: 15
+                //     text: w_text
+                // }
             }
         }
         ListModel {

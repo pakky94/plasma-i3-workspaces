@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+    <kcfgfile name=""/>
+
+    <group name="General">
+        <entry name="textFont" type="String">
+            <default>Arial</default>
+        </entry>
+        <entry name="textSize" type="Int">
+            <default>15</default>
+        </entry>
+    </group>
+    <group name="Colors">
+        <entry name="textColor" type="Color">
+            <default>#dddddd</default>
+        </entry>
+        <entry name="borderNormalWsColor" type="Color">
+            <default>#787878</default>
+        </entry>
+        <entry name="borderVisibleWsColor" type="Color">
+            <default>#dddddd</default>
+        </entry>
+        <entry name="borderFocusedWsColor" type="Color">
+            <default>#0000ff</default>
+        </entry>
+        <entry name="borderUrgentWsColor" type="Color">
+            <default>#ff0000</default>
+        </entry>
+        <entry name="borderModeColor" type="Color">
+            <default>#ff0000</default>
+        </entry>
+    </group>
+</kcfg>
