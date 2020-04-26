@@ -11,7 +11,6 @@ Item {
 
     Plasmoid.preferredRepresentation: Plasmoid.compactRepresentation
     Plasmoid.compactRepresentation: PlasmaComponents.ToolBarLayout {
-    // Plasmoid.compactRepresentation: ToolBar {
         property var is_updating: 0
         property var old_layout: ""
         property var current_mode: "default"
@@ -20,14 +19,9 @@ Item {
 
         id: toolbar
 
-        // spacing: 50
-        // width: 500
-        // width: row_container.implicitWidth
-        // anchors.fill: parent
-
         PlasmaI3Workspaces {
             id: plasmai3workspaces
-            onResultReady: {
+            onWorkspaceChanged: {
                 is_updating = is_updating - 1;
                 updateOutText();
                 if (is_updating == 0) {
@@ -35,32 +29,16 @@ Item {
                     is_updating = is_updating + 1;
                 }
             }
-            onModeChangedReady: {
+            onModeChanged: {
                 var input = JSON.parse(s);
-                // var text = input.change;
                 current_mode = input.change;
                 updateOutText();
-                // console.log(s);
-                // if (text.localeCompare("default") == 0) {
-                //     mode_view.set_text("");
-                //     mode_view.width = 0
-                //     mode_text_width = 0
-                //     mode_view.border.color = "#00000000"
-                // } else {
-                //     mode_view.set_text(text);
-                //     mode_view_text_metrics.text = text;
-                //     mode_view.width = mode_view_text_metrics.width + 10;
-                //     mode_text_width = mode_view_text_metrics.width + 10;
-                //     mode_view.border.color = "red"
-                // }
+            }
+            onI3restarted: {
+                restart_timer.start();
             }
         }
 
-        TextMetrics {
-            id: mode_view_text_metrics
-            font.family: "Arial"
-            font.pixelSize: 15
-        }
         TextMetrics {
             id: textMetrics
             font.family: "Arial"
@@ -71,9 +49,6 @@ Item {
             if (input_str.localeCompare(old_layout) != 0
                 || current_mode.localeCompare(old_mode)) {
                 var input = JSON.parse(input_str);
-                // count = count + 1
-                // output.text = count
-                // var count_w = mode_text_width;
                 var count_w = 0;
                 workspaceModel.clear();
 
@@ -102,7 +77,6 @@ Item {
                         b_color = "red"
                     workspaceModel.append(
                         {
-                            // "workspace_number": w.num,
                             "w_name": w.name,
                             "w_text": w.name,
                             "b_color": b_color
@@ -124,45 +98,27 @@ Item {
                         "b_color": "red"
                     });
                 }
-                // toolbar.width = count_w + mode_text_width
-                // container_item.implicitWidth = 20 * count_w
                 out_view.implicitWidth = count_w + mode_text_width
                 old_layout = input_str
                 old_mode = current_mode
-            } else {
-                // console.log("skip");
             }
         }
 
         Timer {
-            interval: 100
+            id: restart_timer
+            interval: 300
             running: true
             repeat: false
+            triggeredOnStart: false
             onTriggered: {
-                plasmai3workspaces.initMonitorModeChange();
-            }
-        }
-
-        Timer {
-            interval: 20000
-            running: true
-            repeat: true
-            triggeredOnStart: true
-            onTriggered: {
+                plasmai3workspaces.initMonitoring();
                 updateOutText();
-                plasmai3workspaces.waitForUpdate();
-                is_updating = is_updating + 1
-
-                // console.log("end");
             }
         }
 
         Component {
             id: workspaceDelegate
             Rectangle {
-                // width: 20
-                // height: 20
-                // anchors.centerIn: parent
                 width: Math.max(textMetrics.width + 10, 20)
                 height: Math.max(textMetrics.height, 20)
                 color: "#00000000"
@@ -179,7 +135,6 @@ Item {
                 Text {
                     anchors.centerIn: parent
                     color: "#dddddd"
-                    // text: w_name
                     text: textMetrics.text
                     font: textMetrics.font
                 }
@@ -194,10 +149,6 @@ Item {
         ListModel {
             id: workspaceModel
         }
-
-        // Row {
-        //     id: row_container
-        //     anchors.fill: parent
         ListView {
             id: out_view
             anchors.top: parent.top
@@ -208,39 +159,5 @@ Item {
             orientation: ListView.Horizontal
             spacing: 1
         }
-
-        // Rectangle {
-        //     // property var mode_text: "test"
-        //     // property var mode_width: 50
-        //     function set_text(t) {
-        //         mode_text_metrics.text = t;
-        //     }
-
-        //     id: mode_view
-        //     // anchors.centerIn: parent
-        //     anchors.top: parent.top
-        //     anchors.left: out_view.right
-
-        //     width: 1
-        //     height: 20
-        //     color: "#00000000"
-        //     border.color: "#00000000"
-        //     border.width: 2
-        //     TextMetrics {
-        //         id: mode_text_metrics
-        //         font.family: "Arial"
-        //         font.pixelSize: 15
-        //         text: ""
-        //     }
-        //     Text {
-        //         id: mode_text
-        //         anchors.centerIn: parent
-        //         color: "#dddddd"
-        //         // text: w_name
-        //         text: mode_text_metrics.text
-        //         font: mode_text_metrics.font
-        //     }
-        // }
-        // }
     }
 }

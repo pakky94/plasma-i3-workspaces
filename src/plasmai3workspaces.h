@@ -10,19 +10,26 @@
 
 #include <QThread>
 
-class WorkerThread : public QThread
+#include <QDebug>
+
+class WorkspaceMonitor : public QThread
 {
     Q_OBJECT
     void run() override {
+        qDebug() << "started monitoring workspaces";
         QProcess i3_process;
-        i3_process.start("i3-msg", QStringList() << "-t" << "subscribe" << "[\"workspace\"]");
-        i3_process.waitForFinished();
-        emit resultReady();
-        // emit resultReady(result);
+        i3_process.start("i3-msg", QStringList() << "-t" << "subscribe" << "-m" << "[\"workspace\"]");
+        i3_process.waitForStarted();
+        while (i3_process.state() == QProcess::Running) {
+            i3_process.waitForReadyRead();
+            i3_process.readLine();
+            emit workspaceChanged();
+        }
+        emit i3restarted();
     }
 signals:
-    // void resultReady(const QString &s);
-    void resultReady();
+    void workspaceChanged();
+    void i3restarted();
 };
 
 class ModeMonitor : public QThread
@@ -36,11 +43,11 @@ class ModeMonitor : public QThread
             QString result;
             i3_process.waitForReadyRead();
             result = i3_process.readLine();
-            emit modeChangedReady(result);
+            emit modeChanged(result);
         }
     }
 signals:
-    void modeChangedReady(const QString &s);
+    void modeChanged(const QString &s);
 };
 
 class PlasmaI3Workspaces : public QObject {
@@ -50,17 +57,16 @@ public:
     explicit PlasmaI3Workspaces(QObject *parent = 0);
 
 public Q_SLOTS:
-    QString getMessage();
     QString getWorkspaces();
     void goToWorkspace(QString);
-    void waitForUpdate();
-    void initMonitorModeChange();
-    // void handleResult(QString &s);
-    void handleResult();
+    void initMonitoring();
+    void handlei3restart();
+    void handleWorkspaceChanged();
     void handleModeChanged(const QString &s);
 signals:
-    void resultReady(const QString &s);
-    void modeChangedReady(const QString &s);
+    void workspaceChanged();
+    void modeChanged(const QString &s);
+    void i3restarted();
 };
 
 
