@@ -30,9 +30,11 @@ Item {
                 }
             }
             onModeChanged: {
+                if (s.localeCompare("") != 0) {
                 var input = JSON.parse(s);
                 current_mode = input.change;
                 updateOutText();
+            }
             }
             onI3restarted: {
                 restart_timer.start();
