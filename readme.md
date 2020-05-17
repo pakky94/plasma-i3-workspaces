@@ -8,6 +8,8 @@ $ make
 $ sudo make install
 ```
 
+You may need to install `extra-cmake-modules`
+
 Testing:
 ```
 $ kquitapp plasmashell
