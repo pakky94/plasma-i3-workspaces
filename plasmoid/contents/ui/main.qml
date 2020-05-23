@@ -49,6 +49,21 @@ Item {
                 var count_w = 0;
                 workspaceModel.clear();
 
+                var outputs = plasmoid.configuration.outputs;
+                if (outputs.localeCompare("") != 0) {
+                    var ordered_input = [];
+                    outputs = outputs.split(" ");
+                    console.log(outputs);
+                    outputs.forEach(o => {
+                        input.forEach(w => {
+                            if (o.localeCompare(w.output) == 0) {
+                                ordered_input.push(w);
+                            }
+                        })
+                    })
+                    input = ordered_input;
+                }
+
                 var last_out = input[0].output;
                 input.forEach(w => {
 

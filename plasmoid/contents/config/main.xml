@@ -9,6 +9,9 @@
         <entry name="textSize" type="Int">
             <default>15</default>
         </entry>
+        <entry name="outputs" type="String">
+            <default></default>
+        </entry>
     </group>
     <group name="Colors">
         <entry name="textColor" type="Color">

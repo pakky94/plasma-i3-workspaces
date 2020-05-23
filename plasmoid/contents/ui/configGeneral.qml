@@ -12,6 +12,7 @@ Item {
     // property alias cfg_showIcon: showIcon.checked
     property alias cfg_textFont: fontFamily.text
     property alias cfg_textSize: textSize.value
+    property alias cfg_outputs: outputs.text
 
     Kirigami.FormLayout {
         anchors.left: parent.left
@@ -25,6 +26,11 @@ Item {
         SpinBox {
             id: textSize
             Kirigami.FormData.label: i18n ("Size:")
+        }
+        TextField {
+            id: outputs
+            Kirigami.FormData.label: i18n ("Outputs:")
+            placeholderText: i18n("")
         }
 
     }
