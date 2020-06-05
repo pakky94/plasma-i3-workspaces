@@ -53,7 +53,6 @@ Item {
                 if (outputs.localeCompare("") != 0) {
                     var ordered_input = [];
                     outputs = outputs.split(" ");
-                    console.log(outputs);
                     outputs.forEach(o => {
                         input.forEach(w => {
                             if (o.localeCompare(w.output) == 0) {
