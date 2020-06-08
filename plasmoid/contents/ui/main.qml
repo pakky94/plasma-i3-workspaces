@@ -11,6 +11,8 @@ Item {
 
     Plasmoid.preferredRepresentation: Plasmoid.compactRepresentation
     Plasmoid.compactRepresentation: PlasmaComponents.ToolBarLayout {
+        property var panel_height: parent.height
+
         property var is_updating: 0
         property var old_layout: ""
         property var current_mode: "default"
@@ -71,14 +73,14 @@ Item {
                             "b_color": "transparent",
                             "w_name": "",
                             "w_text": "",
-                            "r_width": 20
+                            "r_width": panel_height
                         });
-                        count_w = count_w + 22
+                        count_w = count_w + panel_height + 2
                         last_out = w.output;
                     }
 
                     textMetrics.text = w.name
-                    count_w = count_w + 2 + Math.max(20, textMetrics.width + 10)
+                    count_w = count_w + 2 + Math.max(panel_height, textMetrics.width + panel_height / 2)
 
                     var b_color = plasmoid.configuration.borderNormalWsColor
                     if (w.visible == true)
@@ -92,25 +94,25 @@ Item {
                             "w_name": w.name,
                             "w_text": w.name,
                             "b_color": b_color.toString(),
-                            "r_width": Math.max(textMetrics.width + 10, 20)
+                            "r_width": Math.max(textMetrics.width + panel_height / 2, panel_height)
                         });
                 })
                 out_view.implicitWidth = count_w
 
                 if (current_mode.localeCompare("default") != 0){
                     textMetrics.text = current_mode;
-                    count_w = count_w + 24 + Math.max(20, textMetrics.width + 10);
+                    count_w = count_w + panel_height + 4 + Math.max(panel_height, textMetrics.width + panel_height / 2);
                     workspaceModel.append({
                         "w_name": "",
                         "w_text": "",
                         "b_color": "#00000000",
-                        "r_width": 20
+                        "r_width": panel_height
                     });
                     workspaceModel.append({
                         "w_name": "",
                         "w_text": current_mode,
                         "b_color": plasmoid.configuration.borderModeColor.toString(),
-                        "r_width": Math.max(textMetrics.width + 10, 20)
+                        "r_width": Math.max(textMetrics.width + panel_height / 2, panel_height)
                     });
                 }
                 out_view.implicitWidth = count_w + mode_text_width
@@ -137,7 +139,7 @@ Item {
                 // width: Math.max(textMetrics.width + 10, 20)
                 // height: Math.max(textMetrics.height, 20)
                 width: r_width
-                height: 20
+                height: panel_height
                 color: "#00000000"
                 border.color: b_color
                 // border.color: plasmoid.configuration.borderNormalWsColor
@@ -177,6 +179,10 @@ Item {
             delegate: workspaceDelegate
             orientation: ListView.Horizontal
             spacing: 1
+            height: panel_height
+            onHeightChanged: {
+                updateOutText();
+            }
         }
     }
 }
