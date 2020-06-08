@@ -25,6 +25,7 @@ Item {
         }
         SpinBox {
             id: textSize
+            editable: true
             Kirigami.FormData.label: i18n ("Size:")
         }
         TextField {
